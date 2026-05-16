@@ -33,7 +33,7 @@ func main() {
 	if os.Getenv("DEBUG") == "1" {
 		logLevel = slog.LevelDebug
 	} else if os.Getenv("ENV") == "production" {
-		logLevel = slog.LevelInfo
+		logLevel = slog.LevelWarn // personal pref: reduce noise in prod; bump back to Info if needed
 	}
 
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
