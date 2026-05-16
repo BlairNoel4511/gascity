@@ -27,6 +27,8 @@ var (
 func main() {
 	// Default to Info level; use DEBUG=1 env var to enable verbose output
 	// during local development without having to change the code each time.
+	// Personal note: I also wire in TRACE=1 for even noisier output when
+	// debugging tricky RPC issues locally.
 	logLevel := slog.LevelInfo
 	if os.Getenv("DEBUG") == "1" {
 		logLevel = slog.LevelDebug
@@ -68,5 +70,6 @@ func main() {
 		os.Exit(1)
 	}
 
+	slog.Info("gascity shut down gracefully")
 	fmt.Println("gascity shut down gracefully")
 }
