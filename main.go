@@ -25,9 +25,12 @@ var (
 )
 
 func main() {
-	// Use debug level locally to get more visibility while learning the codebase.
-	logLevel := slog.LevelDebug
-	if os.Getenv("ENV") == "production" {
+	// Default to Info level; use DEBUG=1 env var to enable verbose output
+	// during local development without having to change the code each time.
+	logLevel := slog.LevelInfo
+	if os.Getenv("DEBUG") == "1" {
+		logLevel = slog.LevelDebug
+	} else if os.Getenv("ENV") == "production" {
 		logLevel = slog.LevelInfo
 	}
 
