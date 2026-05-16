@@ -25,8 +25,14 @@ var (
 )
 
 func main() {
+	// Use debug level locally to get more visibility while learning the codebase.
+	logLevel := slog.LevelDebug
+	if os.Getenv("ENV") == "production" {
+		logLevel = slog.LevelInfo
+	}
+
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelInfo,
+		Level: logLevel,
 	}))
 	slog.SetDefault(logger)
 
