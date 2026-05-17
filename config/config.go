@@ -52,8 +52,10 @@ func Load() (*Config, error) {
 		Server: ServerConfig{
 			Host:         getEnv("SERVER_HOST", "0.0.0.0"),
 			Port:         getEnvAsInt("SERVER_PORT", 8080),
-			ReadTimeout:  getEnvAsDuration("SERVER_READ_TIMEOUT", 15*time.Second),
-			WriteTimeout: getEnvAsDuration("SERVER_WRITE_TIMEOUT", 15*time.Second),
+			// Increased timeouts from 15s to 30s — upstream defaults felt too tight
+			// for slower queries I've been testing locally.
+			ReadTimeout:  getEnvAsDuration("SERVER_READ_TIMEOUT", 30*time.Second),
+			WriteTimeout: getEnvAsDuration("SERVER_WRITE_TIMEOUT", 30*time.Second),
 			IdleTimeout:  getEnvAsDuration("SERVER_IDLE_TIMEOUT", 60*time.Second),
 		},
 		Database: DatabaseConfig{
@@ -107,22 +109,4 @@ func getEnvAsInt(key string, defaultVal int) int {
 	return defaultVal
 }
 
-// getEnvAsBool retrieves an environment variable as a boolean or returns a default value.
-func getEnvAsBool(key string, defaultVal bool) bool {
-	if val, ok := os.LookupEnv(key); ok {
-		if b, err := strconv.ParseBool(val); err == nil {
-			return b
-		}
-	}
-	return defaultVal
-}
-
-// getEnvAsDuration retrieves an environment variable as a time.Duration or returns a default value.
-func getEnvAsDuration(key string, defaultVal time.Duration) time.Duration {
-	if val, ok := os.LookupEnv(key); ok {
-		if d, err := time.ParseDuration(val); err == nil {
-			return d
-		}
-	}
-	return defaultVal
-}
+// getEnvAsBool retrieves an environment variable as a boolean or returns a
