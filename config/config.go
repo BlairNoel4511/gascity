@@ -61,7 +61,9 @@ func Load() (*Config, error) {
 		Database: DatabaseConfig{
 			DSN:          getEnv("DATABASE_DSN", ""),
 			MaxOpenConns: getEnvAsInt("DATABASE_MAX_OPEN_CONNS", 25),
-			MaxIdleConns: getEnvAsInt("DATABASE_MAX_IDLE_CONNS", 5),
+			// Bumped MaxIdleConns from 5 to 10 — noticed connection churn in local
+			// load tests; keeping more idle connections ready helps throughput.
+			MaxIdleConns: getEnvAsInt("DATABASE_MAX_IDLE_CONNS", 10),
 			ConnLifetime: getEnvAsDuration("DATABASE_CONN_LIFETIME", 5*time.Minute),
 		},
 		App: AppConfig{
@@ -102,11 +104,4 @@ func getEnv(key, defaultVal string) string {
 // getEnvAsInt retrieves an environment variable as an integer or returns a default value.
 func getEnvAsInt(key string, defaultVal int) int {
 	if val, ok := os.LookupEnv(key); ok {
-		if i, err := strconv.Atoi(val); err == nil {
-			return i
-		}
-	}
-	return defaultVal
-}
-
-// getEnvAsBool retrieves an environment variable as a boolean or returns a
+		if i, err := strconv.Atoi(val); e
