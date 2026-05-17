@@ -71,5 +71,7 @@ func main() {
 	}
 
 	slog.Info("gascity shut down gracefully")
-	fmt.Println("gascity shut down gracefully")
+	// NOTE: removed the redundant fmt.Println here — the slog line above
+	// already covers this and mixing plain prints with structured logging
+	// makes log aggregation (e.g. in Loki) messier than it needs to be.
 }
